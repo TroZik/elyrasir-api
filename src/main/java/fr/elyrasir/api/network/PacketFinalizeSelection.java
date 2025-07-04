@@ -52,7 +52,7 @@ public class PacketFinalizeSelection {
                     System.out.println("[DEBUG] Point reçu : " + pos);
                 }
 
-                LandManager.get().finalizeSelectionWithName(player, msg.name, msg.points);
+                LandManager.get().finalizeSelectionFromClient(player, msg.name, msg.points);
             }
         });
         ctx.get().setPacketHandled(true);

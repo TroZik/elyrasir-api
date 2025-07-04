@@ -71,7 +71,8 @@ public class LandManager {
      * Sauvegarde une parcelle sous forme de JSON
      */
     private void saveParcel(MinecraftServer server, String name, List<BlockPos> vertices) {
-        System.out.println("[DEBUG] saveParcel() appelée !");
+        System.out.println("[DEBUG] finalizeSelectionFromClient() exécutée !");
+
         System.out.println("[DEBUG] Sauvegarde de la parcelle nommée : " + name);
 
         Path configPath = server.getWorldPath(LevelResource.ROOT)
@@ -252,10 +253,16 @@ public class LandManager {
             return;
         }
 
+        // detection de colision de parcelle désactivé car client side
+       /*
         if (doesParcelOverlap(points, getVisibleParcels(player.level(), player.blockPosition(), 9999))) {
             player.sendSystemMessage(Component.literal("Erreur : la parcelle chevauche une autre existante."));
             return;
         }
+         */
+        System.out.println("[DEBUG] saveParcel() appelée !");
+
+
 
         saveParcel(player.getServer(), name, points);
         existingParcels.add(points);
