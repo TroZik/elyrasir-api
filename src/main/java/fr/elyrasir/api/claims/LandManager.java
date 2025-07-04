@@ -71,10 +71,14 @@ public class LandManager {
      * Sauvegarde une parcelle sous forme de JSON
      */
     private void saveParcel(MinecraftServer server, String name, List<BlockPos> vertices) {
-        Path configPath = server.getLevel(Level.OVERWORLD)
-                .getServer()
-                .getWorldPath(LevelResource.ROOT)
-                .resolve("serverconfig/land_parcels.json");
+        System.out.println("[DEBUG] saveParcel() appelée !");
+        System.out.println("[DEBUG] Sauvegarde de la parcelle nommée : " + name);
+
+        Path configPath = server.getWorldPath(LevelResource.ROOT)
+                .resolve("serverconfig")
+                .resolve("land_parcels.json");
+
+        System.out.println("[Elyrasir] Writing parcel data to: " + configPath); // Debug
 
         File file = configPath.toFile();
         file.getParentFile().mkdirs();
@@ -90,22 +94,26 @@ public class LandManager {
 
         JsonArray array = new JsonArray();
         if (file.exists()) {
-            try {
-                JsonElement existing = JsonParser.parseReader(new java.io.FileReader(file));
+            try (FileReader reader = new FileReader(file)) {
+                JsonElement existing = JsonParser.parseReader(reader);
                 if (existing.isJsonArray()) {
                     array = existing.getAsJsonArray();
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                e.printStackTrace(); // Important pour debug
+            }
         }
 
         array.add(parcel);
 
         try (FileWriter writer = new FileWriter(file, false)) {
             new GsonBuilder().setPrettyPrinting().create().toJson(array, writer);
+            System.out.println("[Elyrasir] Parcel saved successfully.");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     /**
      * Transforme un BlockPos en objet JSON
@@ -150,7 +158,7 @@ public class LandManager {
      */
     @OnlyIn(Dist.CLIENT)
     public void openNamingScreen(Player player) {
-        Minecraft.getInstance().setScreen(new fr.elyrasir.api.client.gui.NameParcelScreen(player));
+        Minecraft.getInstance().setScreen(new fr.elyrasir.api.client.gui.NameParcelScreen());
     }
 
     /**

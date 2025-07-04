@@ -2,6 +2,7 @@ package fr.elyrasir.api;
 
 import com.mojang.logging.LogUtils;
 import fr.elyrasir.api.items.ModItems;
+import fr.elyrasir.api.network.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
@@ -74,6 +75,7 @@ public class ElyrasirApi
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
+        ModItems.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
 
@@ -87,10 +89,13 @@ public class ElyrasirApi
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
-        // Some common setup code
+    private void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("HELLO FROM COMMON SETUP");
+
+        event.enqueueWork(() -> {
+            PacketHandler.register();  // 🔥 Enregistre les packets ici pendant la bonne phase
+            LOGGER.info("PacketHandler registered");
+        });
 
         if (Config.logDirtBlock)
             LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
