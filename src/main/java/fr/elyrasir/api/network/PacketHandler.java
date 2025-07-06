@@ -31,7 +31,22 @@ public class PacketHandler {
                 PacketFinalizeSelection::decode,
                 PacketFinalizeSelection::handle
         );
-        // Tu pourras facilement en rajouter d'autres ici
+        CHANNEL.registerMessage(
+                nextId(),
+                PacketResetSelection.class,
+                PacketResetSelection::toBytes,
+                PacketResetSelection::new,
+                PacketResetSelection::handle
+        );
+
+        CHANNEL.registerMessage(
+                nextId(),
+                PacketDisplayTitle.class,
+                PacketDisplayTitle::encode,
+                PacketDisplayTitle::decode,
+                PacketDisplayTitle::handle
+        );
+// Tu pourras facilement en rajouter d'autres ici
     }
 
     public static void sendToServer(Object packet) {

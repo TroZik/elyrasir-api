@@ -3,6 +3,8 @@ package fr.elyrasir.api;
 import com.mojang.logging.LogUtils;
 import fr.elyrasir.api.items.ModItems;
 import fr.elyrasir.api.network.PacketHandler;
+import fr.elyrasir.api.utils.MinecraftServerHolder;
+import fr.elyrasir.api.utils.onServerTick;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
@@ -78,6 +80,10 @@ public class ElyrasirApi
         ModItems.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+
+        MinecraftForge.EVENT_BUS.register(onServerTick.class);
+        MinecraftForge.EVENT_BUS.register(MinecraftServerHolder.class);
+
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

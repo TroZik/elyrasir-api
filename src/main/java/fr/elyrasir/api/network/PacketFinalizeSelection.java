@@ -53,6 +53,11 @@ public class PacketFinalizeSelection {
                 }
 
                 LandManager.get().finalizeSelectionFromClient(player, msg.name, msg.points);
+
+                if (player instanceof ServerPlayer serverPlayer) {
+                    PacketHandler.sendToClient(serverPlayer, new PacketResetSelection());
+                }
+
             }
         });
         ctx.get().setPacketHandled(true);

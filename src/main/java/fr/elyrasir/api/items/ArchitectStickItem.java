@@ -50,14 +50,17 @@ public class ArchitectStickItem extends Item {
             if (player.isShiftKeyDown()) {
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                     fr.elyrasir.api.client.items.ArchitectStickClientHandler.openNamingScreen();
-
                 });
             } else {
-                ClientSelectionManager.addPoint(pos);
-                player.displayClientMessage(Component.literal("Point " + ClientSelectionManager.size() + " sélectionné : " + pos.toShortString()), true);
+                ClientSelectionManager.addOrReplacePoint(pos);
+                player.displayClientMessage(
+                        Component.literal("Point " + ClientSelectionManager.getSelectedIndex() + " sélectionné : " + pos.toShortString()),
+                        true
+                );
             }
         }
 
         return InteractionResult.SUCCESS;
     }
+
 }

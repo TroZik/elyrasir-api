@@ -1,6 +1,8 @@
 package fr.elyrasir.api.claims;
 
 import com.google.gson.*;
+import fr.elyrasir.api.utils.MinecraftServerHolder;
+import fr.elyrasir.api.utils.PolygonUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -10,11 +12,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.level.storage.LevelResource;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -269,6 +271,125 @@ public class LandManager {
         player.sendSystemMessage(Component.literal("Parcelle '" + name + "' enregistrée avec " + points.size() + " sommets."));
     }
 
+
+    private final Map<UUID, String> playerParcelMap = new HashMap<>();
+    private final Map<String, List<BlockPos>> parcels = new HashMap<>();
+
+
+    public String getParcelAt(BlockPos pos) {
+        reloadParcels(); // 🔁 Recharge dynamique du fichier JSON
+
+        System.out.println("[DEBUG] Vérification de la parcelle pour la position : X=" + pos.getX() + " Z=" + pos.getZ());
+
+        int px = pos.getX();
+        int pz = pos.getZ();
+
+        for (Map.Entry<String, List<BlockPos>> entry : parcels.entrySet()) {
+            String name = entry.getKey();
+            List<BlockPos> polygon = entry.getValue();
+
+            System.out.println("[DEBUG] Parcelle : " + name + " avec " + polygon.size() + " points");
+
+            boolean inside = PolygonUtils.isPointInsidePolygon(px, pz, polygon);
+            System.out.println("[DEBUG] Test avec la parcelle '" + name + "' : inside=" + inside);
+
+            if (inside) {
+                return name;
+            }
+        }
+
+        System.out.println("[DEBUG] -> Aucune parcelle trouvée pour cette position");
+        return null;
+    }
+
+
+    public Map<UUID, String> getPlayerParcelMap() {
+        return playerParcelMap;
+    }
+
+    public Map<String, List<BlockPos>> getParcels() {
+        return parcels;
+    }
+
+   /* public void loadParcelsFromFile() {
+        Path path = FMLPaths.GAME_DIR.get().resolve("serverconfig/land_parcels.json");
+
+        if (!Files.exists(path)) {
+            System.out.println("[DEBUG] Le fichier de parcelles n'existe pas à : " + path);
+            return;
+        }
+
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            Gson gson = new Gson();
+            JsonArray array = JsonParser.parseReader(reader).getAsJsonArray();
+
+            for (JsonElement element : array) {
+                JsonObject obj = element.getAsJsonObject();
+                String name = obj.get("name").getAsString();
+                List<BlockPos> points = new ArrayList<>();
+
+                for (JsonElement vertex : obj.get("vertices").getAsJsonArray()) {
+                    JsonObject v = vertex.getAsJsonObject();
+                    int x = v.get("x").getAsInt();
+                    int z = v.get("z").getAsInt();
+                    points.add(new BlockPos(x, 0, z)); // On ignore le Y ici
+                }
+
+                parcels.put(name, points);
+                System.out.println("[DEBUG] Parcelle chargée : " + name + " avec " + points.size() + " points");
+            }
+        } catch (IOException e) {
+            System.err.println("[ERREUR] Impossible de lire les parcelles : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    */
+
+
+    public void reloadParcels() {
+        parcels.clear();
+
+        if (MinecraftServerHolder.INSTANCE == null) {
+            System.err.println("[ERREUR] MinecraftServer non encore initialisé");
+            return;
+        }
+
+        Path configPath = MinecraftServerHolder.INSTANCE
+                .getWorldPath(LevelResource.ROOT)
+                .resolve("serverconfig")
+                .resolve("land_parcels.json");
+
+        System.out.println("[DEBUG] Chargement dynamique depuis : " + configPath);
+
+        if (!Files.exists(configPath)) {
+            System.out.println("[DEBUG] Fichier JSON non trouvé");
+            return;
+        }
+
+        try (BufferedReader reader = Files.newBufferedReader(configPath)) {
+            JsonArray array = JsonParser.parseReader(reader).getAsJsonArray();
+
+            for (JsonElement element : array) {
+                JsonObject obj = element.getAsJsonObject();
+                String name = obj.get("name").getAsString();
+                List<BlockPos> points = new ArrayList<>();
+
+                for (JsonElement vertex : obj.get("vertices").getAsJsonArray()) {
+                    JsonObject v = vertex.getAsJsonObject();
+                    int x = v.get("x").getAsInt();
+                    int z = v.get("z").getAsInt();
+                    points.add(new BlockPos(x, 0, z)); // Y ignoré
+                }
+
+                parcels.put(name, points);
+                System.out.println("[DEBUG] Parcelle chargée : " + name + " avec " + points.size() + " points");
+            }
+        } catch (IOException e) {
+            System.err.println("[ERREUR] Lecture JSON échouée : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
 
 

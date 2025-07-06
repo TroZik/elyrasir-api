@@ -86,26 +86,12 @@ public class DigitParticleRenderer {
         });
     }
 
-    public static void renderDigit(Level level, BlockPos origin, int digit) {
+    private static void renderSingleDigit(Level level, double baseX, double baseY, double baseZ, float angle, int digit) {
         int[][] digitMatrix = DIGITS.getOrDefault(digit % 10, DIGITS.get(8)); // fallback = 8
-
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) return;
-
-        double baseX = origin.getX() + 0.5;
-        double baseY = origin.getY() + 0.5;
-        double baseZ = origin.getZ() + 0.5;
-
         double spacing = 0.25;
 
         int height = digitMatrix.length;
         int width = digitMatrix[0].length;
-
-        double dx = mc.player.getX() - baseX;
-        double dz = mc.player.getZ() - baseZ;
-
-        // Ajout de +PI pour inverser l'affichage (corriger l'effet miroir)
-        float angle = (float) Math.atan2(dz, dx) + (float) Math.PI;
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
@@ -122,6 +108,45 @@ public class DigitParticleRenderer {
 
                     level.addParticle(ParticleTypes.END_ROD, x, y, z, 0, 0.01, 0);
                 }
+            }
+        }
+    }
+
+    public static void renderDigit(Level level, BlockPos origin, int index) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+
+        double baseX = origin.getX() + 0.5;
+        double baseY = origin.getY() + 0.5;
+        double baseZ = origin.getZ() + 0.5;
+
+        double dx = mc.player.getX() - baseX;
+        double dz = mc.player.getZ() - baseZ;
+
+        float angle = (float) Math.atan2(dz, dx) + (float) Math.PI;
+
+        int displayNumber = index + 1;
+
+        if (displayNumber < 10) {
+            // Affichage standard pour les chiffres 1 à 9
+            renderSingleDigit(level, baseX, baseY, baseZ, angle, displayNumber);
+        } else {
+            // Affichage pour les nombres à deux chiffres (10 à 16)
+            String numStr = Integer.toString(displayNumber);
+            double spacing = 0.8;
+
+            // Centrage dynamique selon le nombre de chiffres
+            double totalWidth = (numStr.length() - 1) * spacing;
+
+            for (int i = 0; i < numStr.length(); i++) {
+                int digit = Character.getNumericValue(numStr.charAt(i));
+
+                double offset = (i - (numStr.length() - 1) / 2.0) * spacing;
+
+                double offsetX = Math.cos(angle + Math.PI / 2) * offset;
+                double offsetZ = Math.sin(angle + Math.PI / 2) * offset;
+
+                renderSingleDigit(level, baseX + offsetX, baseY, baseZ + offsetZ, angle, digit);
             }
         }
     }
