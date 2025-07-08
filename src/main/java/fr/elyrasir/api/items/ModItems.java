@@ -19,8 +19,14 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, "elyrasirapi");
 
+    //ajout de l'architectStick
     public static final RegistryObject<Item> ARCHITECT_STICK =
             ITEMS.register("architect_stick", () -> new ArchitectStickItem(new Item.Properties()));
+
+    //ajout du RoadStick
+    public static final RegistryObject<Item> ROAD_STICK =
+            ITEMS.register("road_stick", () -> new RoadStickItem(new Item.Properties()));
+
 
 
     public static void register(IEventBus eventBus) {

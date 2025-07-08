@@ -35,7 +35,7 @@ public class onServerTick {
 
 
         if (!Objects.equals(currentParcel, lastParcel)) {
-            System.out.println("[DEBUG] Changement détecté : " + lastParcel + " -> " + currentParcel);
+            //System.out.println("[DEBUG] Changement détecté : " + lastParcel + " -> " + currentParcel);
             if (lastParcel != null) {
                 // Sortie
                 PacketHandler.sendToClient((ServerPlayer) player, new PacketDisplayTitle("Vous quittez : " + lastParcel));

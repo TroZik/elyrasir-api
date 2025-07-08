@@ -119,7 +119,7 @@ public class PolygonUtils {
      */
     public static boolean isPointInsidePolygon(int x, int z, List<BlockPos> polygon) {
         if (polygon.size() < 3) {
-            System.out.println("[DEBUG] Polygone invalide : moins de 3 points");
+          //  System.out.println("[DEBUG] Polygone invalide : moins de 3 points");
             return false;
         }
 
@@ -136,7 +136,7 @@ public class PolygonUtils {
 
             // Vérifie si le point est exactement sur une arête (utilisé comme tolérance de bord)
             if (isPointOnSegment(px, pz, xi + 0.5, zi + 0.5, xj + 0.5, zj + 0.5)) {
-                System.out.println("[DEBUG] Point (" + x + "," + z + ") est sur le bord entre (" + xi + "," + zi + ") et (" + xj + "," + zj + ")");
+               // System.out.println("[DEBUG] Point (" + x + "," + z + ") est sur le bord entre (" + xi + "," + zi + ") et (" + xj + "," + zj + ")");
                 return true;
             }
 
@@ -148,7 +148,7 @@ public class PolygonUtils {
             }
         }
 
-        System.out.println("[DEBUG] Point (" + x + "," + z + ") est " + (inside ? "dans" : "hors") + " du polygone");
+       // System.out.println("[DEBUG] Point (" + x + "," + z + ") est " + (inside ? "dans" : "hors") + " du polygone");
         return inside;
     }
 

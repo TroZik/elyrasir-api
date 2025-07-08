@@ -45,9 +45,9 @@ public class PacketFinalizeSelection {
             if (player != null) {
 
                 // 🔍 DEBUG
-                System.out.println("[DEBUG] Serveur : réception du packet PacketFinalizeSelection");
-                System.out.println("[DEBUG] Nom de la parcelle : " + msg.name);
-                System.out.println("[DEBUG] Nombre de points : " + msg.points.size());
+               // System.out.println("[DEBUG] Serveur : réception du packet PacketFinalizeSelection");
+               // System.out.println("[DEBUG] Nom de la parcelle : " + msg.name);
+               // System.out.println("[DEBUG] Nombre de points : " + msg.points.size());
                 for (BlockPos pos : msg.points) {
                     System.out.println("[DEBUG] Point reçu : " + pos);
                 }

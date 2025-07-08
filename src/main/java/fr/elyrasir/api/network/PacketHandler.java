@@ -11,7 +11,7 @@ public class PacketHandler {
 
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation("examplemod", "main"), // Remplace "examplemod" par ton modid
+            new ResourceLocation("elyrasirapi", "main"), // Remplace "examplemod" par ton modid
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
@@ -45,6 +45,14 @@ public class PacketHandler {
                 PacketDisplayTitle::encode,
                 PacketDisplayTitle::decode,
                 PacketDisplayTitle::handle
+        );
+
+        CHANNEL.registerMessage(
+                nextId(),
+                PacketFinalizeRoadSelection.class,
+                PacketFinalizeRoadSelection::encode,
+                PacketFinalizeRoadSelection::decode,
+                PacketFinalizeRoadSelection::handle
         );
 // Tu pourras facilement en rajouter d'autres ici
     }

@@ -262,7 +262,7 @@ public class LandManager {
             return;
         }
          */
-        System.out.println("[DEBUG] saveParcel() appelée !");
+       // System.out.println("[DEBUG] saveParcel() appelée !");
 
 
 
@@ -279,7 +279,7 @@ public class LandManager {
     public String getParcelAt(BlockPos pos) {
         reloadParcels(); // 🔁 Recharge dynamique du fichier JSON
 
-        System.out.println("[DEBUG] Vérification de la parcelle pour la position : X=" + pos.getX() + " Z=" + pos.getZ());
+       // System.out.println("[DEBUG] Vérification de la parcelle pour la position : X=" + pos.getX() + " Z=" + pos.getZ());
 
         int px = pos.getX();
         int pz = pos.getZ();
@@ -288,17 +288,17 @@ public class LandManager {
             String name = entry.getKey();
             List<BlockPos> polygon = entry.getValue();
 
-            System.out.println("[DEBUG] Parcelle : " + name + " avec " + polygon.size() + " points");
+          //  System.out.println("[DEBUG] Parcelle : " + name + " avec " + polygon.size() + " points");
 
             boolean inside = PolygonUtils.isPointInsidePolygon(px, pz, polygon);
-            System.out.println("[DEBUG] Test avec la parcelle '" + name + "' : inside=" + inside);
+          //  System.out.println("[DEBUG] Test avec la parcelle '" + name + "' : inside=" + inside);
 
             if (inside) {
                 return name;
             }
         }
 
-        System.out.println("[DEBUG] -> Aucune parcelle trouvée pour cette position");
+      //  System.out.println("[DEBUG] -> Aucune parcelle trouvée pour cette position");
         return null;
     }
 
@@ -351,7 +351,7 @@ public class LandManager {
         parcels.clear();
 
         if (MinecraftServerHolder.INSTANCE == null) {
-            System.err.println("[ERREUR] MinecraftServer non encore initialisé");
+           // System.err.println("[ERREUR] MinecraftServer non encore initialisé");
             return;
         }
 
@@ -360,10 +360,10 @@ public class LandManager {
                 .resolve("serverconfig")
                 .resolve("land_parcels.json");
 
-        System.out.println("[DEBUG] Chargement dynamique depuis : " + configPath);
+      // System.out.println("[DEBUG] Chargement dynamique depuis : " + configPath);
 
         if (!Files.exists(configPath)) {
-            System.out.println("[DEBUG] Fichier JSON non trouvé");
+          //  System.out.println("[DEBUG] Fichier JSON non trouvé");
             return;
         }
 
@@ -383,10 +383,10 @@ public class LandManager {
                 }
 
                 parcels.put(name, points);
-                System.out.println("[DEBUG] Parcelle chargée : " + name + " avec " + points.size() + " points");
+              //  System.out.println("[DEBUG] Parcelle chargée : " + name + " avec " + points.size() + " points");
             }
         } catch (IOException e) {
-            System.err.println("[ERREUR] Lecture JSON échouée : " + e.getMessage());
+          //  System.err.println("[ERREUR] Lecture JSON échouée : " + e.getMessage());
             e.printStackTrace();
         }
     }

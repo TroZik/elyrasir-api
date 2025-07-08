@@ -23,7 +23,7 @@ public class PacketDisplayTitle {
     }
 
     public static void handle(PacketDisplayTitle msg, Supplier<NetworkEvent.Context> ctx) {
-        System.out.println("[CLIENT] Réception message : " + msg.message);
+     //   System.out.println("[CLIENT] Réception message : " + msg.message);
         ctx.get().enqueueWork(() -> {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player != null) {

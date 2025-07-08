@@ -117,8 +117,10 @@ public class ElyrasirApi
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
             event.accept(EXAMPLE_BLOCK_ITEM);
 
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES)
+        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
             event.accept(ModItems.ARCHITECT_STICK.get());
+            event.accept(ModItems.ROAD_STICK.get());
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
